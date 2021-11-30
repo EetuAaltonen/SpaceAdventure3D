@@ -44,7 +44,7 @@ APlayerShipPawn::APlayerShipPawn()
 	RollSpeed = 50.f;
 	MaxForwardSpeed = 4000.f;
 	MaxReverseSpeed = -1000.f;
-	CurrentForwardSpeed = 500.f;
+	CurrentForwardSpeed = 0.f;
 
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
