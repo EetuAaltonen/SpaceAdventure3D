@@ -84,4 +84,6 @@ public:
 	FORCEINLINE class USpringArmComponent* GetSpringArm() const { return SpringArm; }
 
 	FORCEINLINE class UCameraComponent* GetCamera() const { return Camera; }
+
+	void ResetMovement();
 };

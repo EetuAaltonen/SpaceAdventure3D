@@ -44,7 +44,9 @@ APlayerShipPawn::APlayerShipPawn()
 	RollSpeed = 50.f;
 	MaxForwardSpeed = 4000.f;
 	MaxReverseSpeed = -1000.f;
-	CurrentForwardSpeed = 0.f;
+
+	// Reset movement
+	ResetMovement();
 
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -139,4 +141,12 @@ void APlayerShipPawn::BoostInput(float Val)
 	float NewForwardSpeed = CurrentForwardSpeed + (GetWorld()->GetDeltaSeconds() * CurrentAcc);
 
 	CurrentForwardSpeed = FMath::Clamp(NewForwardSpeed, MinSpeed, MaxSpeed);*/
+}
+
+void APlayerShipPawn::ResetMovement()
+{
+	CurrentForwardSpeed = 0.f;
+	CurrentYawSpeed = 0.f;
+	CurrentPitchSpeed = 0.f;
+	CurrentRollSpeed = 0.f;
 }
