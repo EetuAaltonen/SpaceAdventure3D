@@ -2,6 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Engine/TriggerBox.h"
+
+#include "LandingControllerActor.h"
+
 #include "LandingTriggerBox.generated.h"
 
 /**
@@ -28,5 +31,5 @@ public:
 	void OnOverlapEnd(class AActor* OverlappedActor, class AActor* OtherActor);
 
 	UPROPERTY(EditAnywhere)
-	class APawn* SpecificActor;
+	class ALandingControllerActor* LandingControllerActor;
 };

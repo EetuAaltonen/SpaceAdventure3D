@@ -11,25 +11,22 @@ void ALandingTriggerBox::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!SpecificActor)
+	if (!LandingControllerActor)
 	{
-		SpecificActor = GetWorld()->GetFirstPlayerController()->GetPawn();
+		if (Destroy())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("%s destroyed because missing landing controller"), *GetName());
+		}
 	}
 }
 
 void ALandingTriggerBox::OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor)
 {
-	if (OtherActor && (OtherActor != this) && OtherActor == SpecificActor)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%s has entered the landing trigger"), *OtherActor->GetName());
-	}
+	LandingControllerActor->OnOverlapBegin(OverlappedActor, OtherActor);
 }
 
 void ALandingTriggerBox::OnOverlapEnd(class AActor* OverlappedActor, class AActor* OtherActor)
 {
-	if (OtherActor && (OtherActor != this) && OtherActor == SpecificActor)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%s has lef the landing trigger"), *OtherActor->GetName());
-	}
+	LandingControllerActor->OnOverlapEnd(OverlappedActor, OtherActor);
 }
 
