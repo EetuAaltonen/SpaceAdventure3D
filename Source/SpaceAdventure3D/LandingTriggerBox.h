@@ -7,10 +7,6 @@
 
 #include "LandingTriggerBox.generated.h"
 
-/**
- * 
- */
-
 UCLASS()
 class SPACEADVENTURE3D_API ALandingTriggerBox : public ATriggerBox
 {

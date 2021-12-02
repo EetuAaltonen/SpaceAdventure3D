@@ -2,7 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
+#include "Components/TimelineComponent.h"
+
 #include "LandingControllerActor.generated.h"
+
+class UCurveFloat;
 
 UCLASS()
 class SPACEADVENTURE3D_API ALandingControllerActor : public AActor
@@ -19,6 +24,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	FTimeline CurveTimeline;
+
+	UPROPERTY(EditAnywhere, Category = "Timeline")
+	UCurveFloat* CurveFloat;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -28,6 +38,13 @@ public:
 
 	UFUNCTION()
 	void OnOverlapEnd(class AActor* OverlappedActor, class AActor* OtherActor);
+
+	UFUNCTION()
+	void TimelineProgress(float Value);
+
+	FORCEINLINE int GetLandingState() const { return LandingStateIndex; }
+
+	FORCEINLINE void SetLandingStartLocation(FVector StartLocation) { LandingStartLocation = StartLocation; }
 
 	UPROPERTY(EditAnywhere)
 	class APlayerShipPawn* PlayerShipPawn;
@@ -46,5 +63,9 @@ public:
 
 private:
 
-	int StateIndex;
+	int LandingStateIndex;
+	FVector LandingStartLocation;
+	FVector LandingTargetLocation;
+
+	float LandingAlpha;
 };
