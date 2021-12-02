@@ -14,11 +14,11 @@ void ALandingControllerActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (!LandingPadActor || !LandingCameraActor)
+	if (!LandingTriggerActor || !LandingPadActor || !LandingCameraActor)
 	{
 		if (Destroy())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("%s destroyed because missing land pad or landing camera"), *GetName());
+			UE_LOG(LogTemp, Warning, TEXT("%s destroyed because missing landing trigger or land pad or landing camera"), *GetName());
 		}
 	}
 
@@ -44,6 +44,8 @@ void ALandingControllerActor::BeginPlay()
 	// Landing
 	LandingStateIndex = 0;
 	DefaultCameraActor = nullptr;
+
+	LandingStartLocation = LandingTriggerActor->GetActorLocation();
 
 	LandingTargetLocation = LandingPadActor->GetActorLocation();
 	LandingTargetLocation.Z += 50.f;

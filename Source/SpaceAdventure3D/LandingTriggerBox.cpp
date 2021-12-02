@@ -22,7 +22,6 @@ void ALandingTriggerBox::BeginPlay()
 
 void ALandingTriggerBox::OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor)
 {
-	LandingControllerActor->SetLandingStartLocation(GetActorLocation());
 	LandingControllerActor->OnOverlapBegin(OverlappedActor, OtherActor);
 }
 

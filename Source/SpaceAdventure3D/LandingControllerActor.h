@@ -44,13 +44,14 @@ public:
 
 	FORCEINLINE int GetLandingState() const { return LandingStateIndex; }
 
-	FORCEINLINE void SetLandingStartLocation(FVector StartLocation) { LandingStartLocation = StartLocation; }
-
 	UPROPERTY(EditAnywhere)
 	class APlayerShipPawn* PlayerShipPawn;
 
 	UPROPERTY(EditAnywhere)
 	class APlayerController* PlayerController;
+
+	UPROPERTY(EditAnywhere)
+	class AActor* LandingTriggerActor;
 
 	UPROPERTY(EditAnywhere)
 	class AActor* LandingPadActor;
