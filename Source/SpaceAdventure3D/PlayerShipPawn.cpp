@@ -45,6 +45,9 @@ APlayerShipPawn::APlayerShipPawn()
 	MaxForwardSpeed = 4000.f;
 	MaxReverseSpeed = -1000.f;
 
+	// Set controls parameters
+	IsCinematicControlled = false;
+
 	// Reset movement
 	ResetMovement();
 
@@ -63,22 +66,25 @@ void APlayerShipPawn::BeginPlay()
 // Called every frame
 void APlayerShipPawn::Tick(float DeltaSeconds)
 {
-	const FVector LocalMove = FVector(CurrentForwardSpeed * DeltaSeconds, 0.f, 0.f);
-
-	// Move plan forwards (with sweep so we stop when we collide with things)
-	AddActorLocalOffset(LocalMove, true);
-
-	// Calculate change in rotation this frame
-	FRotator DeltaRotation(0, 0, 0);
-	DeltaRotation.Pitch = CurrentPitchSpeed * DeltaSeconds;
-	DeltaRotation.Yaw = CurrentYawSpeed * DeltaSeconds;
-	DeltaRotation.Roll = CurrentRollSpeed * DeltaSeconds;
-
-	// Rotate plane
-	AddActorLocalRotation(DeltaRotation);
-
 	// Call any parent class Tick implementation
 	Super::Tick(DeltaSeconds);
+
+	if (!IsCinematicControlled)
+	{
+		const FVector LocalMove = FVector(CurrentForwardSpeed * DeltaSeconds, 0.f, 0.f);
+
+		// Move plan forwards (with sweep so we stop when we collide with things)
+		AddActorLocalOffset(LocalMove, true);
+
+		// Calculate change in rotation this frame
+		FRotator DeltaRotation(0, 0, 0);
+		DeltaRotation.Pitch = CurrentPitchSpeed * DeltaSeconds;
+		DeltaRotation.Yaw = CurrentYawSpeed * DeltaSeconds;
+		DeltaRotation.Roll = CurrentRollSpeed * DeltaSeconds;
+
+		// Rotate plane
+		AddActorLocalRotation(DeltaRotation);
+	}
 }
 
 void APlayerShipPawn::NotifyHit(class UPrimitiveComponent* MyComp, class AActor* Other, class UPrimitiveComponent* OtherComp,
@@ -106,6 +112,8 @@ void APlayerShipPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 
 void APlayerShipPawn::MoveUpInput(float Val)
 {
+	if (IsCinematicControlled) return;
+
 	float TargetPitchSpeed = (Val * TurnSpeed * -1.f);
 	TargetPitchSpeed += (FMath::Abs(CurrentYawSpeed) * -0.2f);
 
@@ -114,6 +122,8 @@ void APlayerShipPawn::MoveUpInput(float Val)
 
 void APlayerShipPawn::MoveRightInput(float Val)
 {
+	if (IsCinematicControlled) return;
+
 	float TargetYawSpeed = (Val * TurnSpeed);
 
 	CurrentYawSpeed = FMath::FInterpTo(CurrentYawSpeed, TargetYawSpeed, GetWorld()->GetDeltaSeconds(), 2.f);
@@ -121,6 +131,8 @@ void APlayerShipPawn::MoveRightInput(float Val)
 
 void APlayerShipPawn::ThrustInput(float Val)
 {
+	if (IsCinematicControlled) return;
+
 	float CurrentAcc = Val * Acceleration;
 	float NewForwardSpeed = CurrentForwardSpeed + (GetWorld()->GetDeltaSeconds() * CurrentAcc);
 
@@ -129,6 +141,8 @@ void APlayerShipPawn::ThrustInput(float Val)
 
 void APlayerShipPawn::RollInput(float Val)
 {
+	if (IsCinematicControlled) return;
+
 	float TargetRollSpeed = Val * RollSpeed;
 
 	CurrentRollSpeed = FMath::FInterpTo(CurrentRollSpeed, TargetRollSpeed, GetWorld()->GetDeltaSeconds(), 2.f);
@@ -136,6 +150,8 @@ void APlayerShipPawn::RollInput(float Val)
 
 void APlayerShipPawn::BoostInput(float Val)
 {
+	if (IsCinematicControlled) return;
+
 	/*bool bHasInput = !FMath::IsNearlyEqual(Val, 0.f);
 	float CurrentAcc = bHasInput ? (Val * Acceleration) : (-0.5f * Acceleration);
 	float NewForwardSpeed = CurrentForwardSpeed + (GetWorld()->GetDeltaSeconds() * CurrentAcc);
@@ -149,4 +165,16 @@ void APlayerShipPawn::ResetMovement()
 	CurrentYawSpeed = 0.f;
 	CurrentPitchSpeed = 0.f;
 	CurrentRollSpeed = 0.f;
+}
+
+bool APlayerShipPawn::RequestSetCinematicControl()
+{
+	IsCinematicControlled = true;
+	return true;
+}
+
+bool APlayerShipPawn::RequestReleaseCinematicControl()
+{
+	IsCinematicControlled = false;
+	return true;
 }

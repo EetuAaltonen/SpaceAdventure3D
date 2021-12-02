@@ -77,6 +77,8 @@ private:
 
 	float CurrentRollSpeed;
 
+	bool IsCinematicControlled;
+
 public:
 
 	FORCEINLINE class UStaticMeshComponent* GetPlaneMesh() const { return PlaneMesh; }
@@ -84,6 +86,10 @@ public:
 	FORCEINLINE class USpringArmComponent* GetSpringArm() const { return SpringArm; }
 
 	FORCEINLINE class UCameraComponent* GetCamera() const { return Camera; }
+
+	bool RequestSetCinematicControl();
+
+	bool RequestReleaseCinematicControl();
 
 	void ResetMovement();
 };
